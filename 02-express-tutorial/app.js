@@ -28,6 +28,27 @@ app.get('/api/products/:productID/reviews/:reviewID', (req, res) => {
     res.send('hello world')
 })
 
+app.get('/api/v1/query', (req, res) => {
+
+    const { search, limit } = req.query
+
+    let storedProducts = [...products]
+
+    if (search) {
+        storedProducts = storedProducts.filter((product) => {
+            return product.name.startsWith(search)
+        })
+    }
+    if (limit) {
+        storedProducts = storedProducts.slice(0, Number(limit))
+    }
+    if(storedProducts.length < 1) {
+        // res.send('no products match search.')
+        res.status(200).json( { success: true, data: [] })
+    }
+    res.status(200).json(storedProducts)
+})
+
 app.listen(5000, () => {
   console.log('Server is listening on port 5000....')
 })
