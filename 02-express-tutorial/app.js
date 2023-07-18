@@ -14,6 +14,20 @@ app.get('/api/products', (req, res) => {
     res.json(newProducts)
 })
 
+app.get('/api/products/:productID', (req, res) => {
+    const singleProduct = products.find((product) => product.id === Number(req.params.productID))
+    if (singleProduct === undefined) {
+        res.status(404).send('Product does not exist')
+    } else {
+        res.json(singleProduct)
+    }
+})
+
+app.get('/api/products/:productID/reviews/:reviewID', (req, res) => {
+    console.log(req.params)
+    res.send('hello world')
+})
+
 app.listen(5000, () => {
   console.log('Server is listening on port 5000....')
 })
