@@ -1,52 +1,26 @@
 const express = require('express')
 const app = express()
-const { products } = require('./data')
+const logger = require('./logger')
 
-app.get('/', (req, res) => {
-  res.send('<h1>hello oliver</h1><a href="/api/products">products</a>')
+app.use('/api', logger)
+
+// req => middleware => res
+
+app.get('/',  (req, res) => {
+
+    res.send('Home')
+})
+
+app.get('/about', (req, res) => {
+    res.send('About')
 })
 
 app.get('/api/products', (req, res) => {
-    const newProducts = products.map((product) => {
-        const { id, name, image } = product
-        return { id, name, image }
-    })
-    res.json(newProducts)
+    res.send('Products')
 })
 
-app.get('/api/products/:productID', (req, res) => {
-    const singleProduct = products.find((product) => product.id === Number(req.params.productID))
-    if (singleProduct === undefined) {
-        res.status(404).send('Product does not exist')
-    } else {
-        res.json(singleProduct)
-    }
-})
-
-app.get('/api/products/:productID/reviews/:reviewID', (req, res) => {
-    console.log(req.params)
-    res.send('hello world')
-})
-
-app.get('/api/v1/query', (req, res) => {
-
-    const { search, limit } = req.query
-
-    let storedProducts = [...products]
-
-    if (search) {
-        storedProducts = storedProducts.filter((product) => {
-            return product.name.startsWith(search)
-        })
-    }
-    if (limit) {
-        storedProducts = storedProducts.slice(0, Number(limit))
-    }
-    if(storedProducts.length < 1) {
-        // res.send('no products match search.')
-        res.status(200).json( { success: true, data: [] })
-    }
-    res.status(200).json(storedProducts)
+app.get('/api/items', (req, res) => {
+    res.send('Items')
 })
 
 app.listen(5000, () => {
